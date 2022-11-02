@@ -1,0 +1,180 @@
+#+title: plugins
+#+property: header-args :tangle plugins.lua
+
+* Autoload
+Automatically installs and sets up packer.nvim on any machine you clone your configuration to
+#+begin_src lua
+local ensure_packer = function()
+  local fn = vim.fn
+  local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
+  if fn.empty(fn.glob(install_path)) > 0 then
+    fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
+    vim.cmd [[packadd packer.nvim]]
+    return true
+  end
+  return false
+end
+#+end_src
+
+Automatically runs :PackerCompile whenever plugins.lua is updated with an autocommand
+#+begin_src lua
+vim.cmd([[
+  augroup packer_user_config
+    autocmd!
+    autocmd BufWritePost plugins.lua source <afile> | PackerCompile
+  augroup end
+]])
+local packer_bootstrap = ensure_packer()
+#+end_src
+* Keymaps
+#+begin_src lua
+local opts = { noremap = true, silent = true }
+local keymap = vim.api.nvim_set_keymap
+
+--Remap space as leader key
+keymap("", "<Space>", "<Nop>", opts)
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
+#+end_src
+** Windows
+#+begin_src lua
+keymap("n", "<C-h>", "<C-w>h", opts)
+keymap("n", "<C-j>", "<C-w>j", opts)
+keymap("n", "<C-k>", "<C-w>k", opts)
+keymap("n", "<C-l>", "<C-w>l", opts)
+
+keymap("n", "<leader>ws", ":split <cr>", opts)
+keymap("n", "<leader>wv", ":vsplit <cr>", opts)
+#+end_src
+** NERDTree
+#+begin_src lua
+keymap("", "<leader>f", ":NERDTreeToggle <cr>", opts)
+#+end_src
+** Telescope
+#+begin_src lua
+-- Doesn't work with keymap func, idk why
+local builtin = require('telescope.builtin')
+vim.keymap.set('n', '<leader>sf', builtin.find_files, {})
+vim.keymap.set('n', '<leader>sg', builtin.live_grep, {})
+vim.keymap.set('n', '<leader>sb', builtin.buffers, {})
+vim.keymap.set('n', '<leader>sh', builtin.help_tags, {})
+#+end_src
+
+Project search
+#+begin_src lua
+keymap(
+	'n',
+	'<leader>pp',
+	":lua require'telescope'.extensions.project.project{}<cr>",
+	opts
+)
+#+end_src
+** DZEN
+#+begin_src lua
+keymap("n", "<leader>ch", ":Limelight!! <cr> :Goyo <cr>", opts)
+#+end_src
+* Packer
+Func to wrap use
+#+begin_src lua
+return require('packer').startup(function(use)
+#+end_src
+** Theme
+Pywal theme
+#+begin_src lua
+	use {
+		'dylanaraps/wal.vim',
+		config = "vim.cmd('colorscheme wal')"
+	}
+#+end_src
+
+** Starify
+#+begin_src lua
+use 'mhinz/vim-startify'
+#+end_src
+** NerdTree
+#+begin_src lua
+	use {
+		'preservim/nerdtree',
+		config = function()
+			vim.cmd('let NERDTreeShowHidden = 1')
+		end
+	}
+#+end_src
+
+#+begin_src lua
+	use {
+		'Xuyuanp/nerdtree-git-plugin',
+		requires = 'preservim/nerdtree'
+	}
+#+end_src
+** Git
+#+begin_src lua
+	use {
+		'TimUntersberger/neogit',
+		requires = 'nvim-lua/plenary.nvim'
+	}
+#+end_src
+** Project
+#+begin_src lua
+	use 'ahmedkhalf/project.nvim'
+#+end_src
+** Telescope
+#+begin_src lua
+	use {
+		'nvim-telescope/telescope.nvim', tag = '0.1.0',
+		requires = { {'nvim-lua/plenary.nvim'} }
+	}
+#+end_src
+
+Telescope for project search
+#+begin_src lua
+	use {
+		'nvim-telescope/telescope-project.nvim',
+		requires = "nvim-telescope/telescope-project.nvim",
+		config = function()
+			require'telescope'.load_extension('project')
+		end
+	}
+#+end_src
+** LSP
+#+begin_src lua
+	use {
+		'neoclide/coc.nvim',
+		branch = 'release'
+	}
+#+end_src
+
+lsp_lines is a simple neovim plugin that renders diagnostics using virtual lines on top of the real line of code
+#+begin_src lua
+ use 'neovim/nvim-lspconfig'
+    use {
+        'https://git.sr.ht/~whynothugo/lsp_lines.nvim',
+        config = function()
+        require("lsp_lines").setup()
+        end
+    }
+#+end_src
+** Treesitter
+#+begin_src lua
+	use {
+		'nvim-treesitter/nvim-treesitter',
+		run = ':TSUpdate'
+	}
+#+end_src
+** DZEN mode
+#+begin_src lua
+	use 'junegunn/limelight.vim'
+	use 'junegunn/goyo.vim'
+#+end_src
+
+** Snippets
+#+begin_src lua
+	use { 'L3MON4D3/LuaSnip', tag = 'v<CurrentMajor>.*' }
+#+end_src
+
+
+End of wrapping
+#+begin_src lua
+-- TODO Find a way to wrap it
+end)
+#+end_src
