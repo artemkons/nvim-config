@@ -17,6 +17,14 @@ vim.cmd([[
 ]])
 local packer_bootstrap = ensure_packer()
 
+vim.cmd([[
+    augroup MyColors
+        autocmd!
+        autocmd ColorScheme * :highlight BufferTabpageFill ctermbg=none
+        autocmd ColorScheme * :highlight BufferCurrentMod ctermfg=1
+    augroup END
+]])
+
 local opts = { noremap = true, silent = true }
 local keymap = vim.api.nvim_set_keymap
 
@@ -77,6 +85,24 @@ use 'mhinz/vim-startify'
 		requires = 'nvim-lua/plenary.nvim'
 	}
 
+    use {
+      'romgrk/barbar.nvim',
+      config = function()
+        require'bufferline'.setup {
+          icons = false
+        }
+      end
+    }
+
+    use 'vim-airline/vim-airline'
+
+    use {
+      'vim-airline/vim-airline-themes',
+      config = function()
+        vim.cmd("let g:airline_theme='jellybeans'")
+      end
+    }
+
 	use 'ahmedkhalf/project.nvim'
 
 	use {
@@ -97,13 +123,27 @@ use 'mhinz/vim-startify'
 		branch = 'release'
 	}
 
- use 'neovim/nvim-lspconfig'
     use {
-        'https://git.sr.ht/~whynothugo/lsp_lines.nvim',
-        config = function()
-        require("lsp_lines").setup()
-        end
+    'neovim/nvim-lspconfig',
+    config = function()
+            require("lspconfig").clangd.setup {
+                on_attach = function(client, bufnr)
+                    navic.attach(client, bufnr)
+                end
+            }
+    end
     }
+use {
+    'https://git.sr.ht/~whynothugo/lsp_lines.nvim',
+    config = function()
+        require("lsp_lines").setup()
+    end
+ }
+
+use {
+    "SmiteshP/nvim-navic",
+    requires = "neovim/nvim-lspconfig"
+}
 
 	use {
 		'nvim-treesitter/nvim-treesitter',

@@ -79,6 +79,12 @@ _G.packer_plugins = {
     path = "/Users/konstantinov050701gmail.com/.local/share/nvim/site/pack/packer/start/LuaSnip",
     url = "https://github.com/L3MON4D3/LuaSnip"
   },
+  ["barbar.nvim"] = {
+    config = { "\27LJ\2\nF\0\0\3\0\4\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\3\0B\0\2\1K\0\1\0\1\0\1\nicons\1\nsetup\15bufferline\frequire\0" },
+    loaded = true,
+    path = "/Users/konstantinov050701gmail.com/.local/share/nvim/site/pack/packer/start/barbar.nvim",
+    url = "https://github.com/romgrk/barbar.nvim"
+  },
   ["coc.nvim"] = {
     loaded = true,
     path = "/Users/konstantinov050701gmail.com/.local/share/nvim/site/pack/packer/start/coc.nvim",
@@ -117,9 +123,15 @@ _G.packer_plugins = {
     url = "https://github.com/Xuyuanp/nerdtree-git-plugin"
   },
   ["nvim-lspconfig"] = {
+    config = { "\27LJ\2\n,\0\2\6\0\2\0\0066\2\0\0009\2\1\2\18\4\0\0\18\5\1\0B\2\3\1K\0\1\0\vattach\nnavic\\\1\0\4\0\a\0\n6\0\0\0'\2\1\0B\0\2\0029\0\2\0009\0\3\0005\2\5\0003\3\4\0=\3\6\2B\0\2\1K\0\1\0\14on_attach\1\0\0\0\nsetup\vclangd\14lspconfig\frequire\0" },
     loaded = true,
     path = "/Users/konstantinov050701gmail.com/.local/share/nvim/site/pack/packer/start/nvim-lspconfig",
     url = "https://github.com/neovim/nvim-lspconfig"
+  },
+  ["nvim-navic"] = {
+    loaded = true,
+    path = "/Users/konstantinov050701gmail.com/.local/share/nvim/site/pack/packer/start/nvim-navic",
+    url = "https://github.com/SmiteshP/nvim-navic"
   },
   ["nvim-treesitter"] = {
     loaded = true,
@@ -147,6 +159,17 @@ _G.packer_plugins = {
     path = "/Users/konstantinov050701gmail.com/.local/share/nvim/site/pack/packer/start/telescope.nvim",
     url = "https://github.com/nvim-telescope/telescope.nvim"
   },
+  ["vim-airline"] = {
+    loaded = true,
+    path = "/Users/konstantinov050701gmail.com/.local/share/nvim/site/pack/packer/start/vim-airline",
+    url = "https://github.com/vim-airline/vim-airline"
+  },
+  ["vim-airline-themes"] = {
+    config = { "\27LJ\2\nD\0\0\3\0\3\0\0056\0\0\0009\0\1\0'\2\2\0B\0\2\1K\0\1\0%let g:airline_theme='jellybeans'\bcmd\bvim\0" },
+    loaded = true,
+    path = "/Users/konstantinov050701gmail.com/.local/share/nvim/site/pack/packer/start/vim-airline-themes",
+    url = "https://github.com/vim-airline/vim-airline-themes"
+  },
   ["vim-startify"] = {
     loaded = true,
     path = "/Users/konstantinov050701gmail.com/.local/share/nvim/site/pack/packer/start/vim-startify",
@@ -161,22 +184,34 @@ _G.packer_plugins = {
 }
 
 time([[Defining packer_plugins]], false)
--- Config for: wal.vim
-time([[Config for wal.vim]], true)
-vim.cmd('colorscheme wal')
-time([[Config for wal.vim]], false)
--- Config for: lsp_lines.nvim
-time([[Config for lsp_lines.nvim]], true)
-try_loadstring("\27LJ\2\n7\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\14lsp_lines\frequire\0", "config", "lsp_lines.nvim")
-time([[Config for lsp_lines.nvim]], false)
+-- Config for: barbar.nvim
+time([[Config for barbar.nvim]], true)
+try_loadstring("\27LJ\2\nF\0\0\3\0\4\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\3\0B\0\2\1K\0\1\0\1\0\1\nicons\1\nsetup\15bufferline\frequire\0", "config", "barbar.nvim")
+time([[Config for barbar.nvim]], false)
 -- Config for: telescope-project.nvim
 time([[Config for telescope-project.nvim]], true)
 try_loadstring("\27LJ\2\nL\0\0\3\0\4\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0'\2\3\0B\0\2\1K\0\1\0\fproject\19load_extension\14telescope\frequire\0", "config", "telescope-project.nvim")
 time([[Config for telescope-project.nvim]], false)
+-- Config for: nvim-lspconfig
+time([[Config for nvim-lspconfig]], true)
+try_loadstring("\27LJ\2\n,\0\2\6\0\2\0\0066\2\0\0009\2\1\2\18\4\0\0\18\5\1\0B\2\3\1K\0\1\0\vattach\nnavic\\\1\0\4\0\a\0\n6\0\0\0'\2\1\0B\0\2\0029\0\2\0009\0\3\0005\2\5\0003\3\4\0=\3\6\2B\0\2\1K\0\1\0\14on_attach\1\0\0\0\nsetup\vclangd\14lspconfig\frequire\0", "config", "nvim-lspconfig")
+time([[Config for nvim-lspconfig]], false)
 -- Config for: nerdtree
 time([[Config for nerdtree]], true)
 try_loadstring("\27LJ\2\n>\0\0\3\0\3\0\0056\0\0\0009\0\1\0'\2\2\0B\0\2\1K\0\1\0\31let NERDTreeShowHidden = 1\bcmd\bvim\0", "config", "nerdtree")
 time([[Config for nerdtree]], false)
+-- Config for: vim-airline-themes
+time([[Config for vim-airline-themes]], true)
+try_loadstring("\27LJ\2\nD\0\0\3\0\3\0\0056\0\0\0009\0\1\0'\2\2\0B\0\2\1K\0\1\0%let g:airline_theme='jellybeans'\bcmd\bvim\0", "config", "vim-airline-themes")
+time([[Config for vim-airline-themes]], false)
+-- Config for: lsp_lines.nvim
+time([[Config for lsp_lines.nvim]], true)
+try_loadstring("\27LJ\2\n7\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\14lsp_lines\frequire\0", "config", "lsp_lines.nvim")
+time([[Config for lsp_lines.nvim]], false)
+-- Config for: wal.vim
+time([[Config for wal.vim]], true)
+vim.cmd('colorscheme wal')
+time([[Config for wal.vim]], false)
 
 _G._packer.inside_compile = false
 if _G._packer.needs_bufread == true then

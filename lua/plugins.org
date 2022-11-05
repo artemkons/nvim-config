@@ -26,6 +26,18 @@ vim.cmd([[
 ]])
 local packer_bootstrap = ensure_packer()
 #+end_src
+
+Smth overrides config highlight colors
+#+begin_src lua
+vim.cmd([[
+    augroup MyColors
+        autocmd!
+        autocmd ColorScheme * :highlight BufferTabpageFill ctermbg=none
+        autocmd ColorScheme * :highlight BufferCurrentMod ctermfg=1
+    augroup END
+]])
+#+end_src
+
 * Keymaps
 #+begin_src lua
 local opts = { noremap = true, silent = true }
@@ -114,6 +126,38 @@ use 'mhinz/vim-startify'
 		requires = 'nvim-lua/plenary.nvim'
 	}
 #+end_src
+** Tabline
+
+[[https://github.com/romgrk/barbar.nvim][Github page]]
+#+begin_src lua
+    use {
+      'romgrk/barbar.nvim',
+      config = function()
+        require'bufferline'.setup {
+          icons = false
+        }
+      end
+    }
+#+end_src
+** Statusline
+
+[[https://github.com/vim-airline/vim-airline][vim-airline repo]]
+#+begin_src lua
+    use 'vim-airline/vim-airline'
+#+end_src
+
+[[https://github.com/vim-airline/vim-airline-themes#vim-airline-themes--][vim-airline-themes]]
+:AirlineTheme {theme-name} Displays or changes the current theme.
+[[https://github.com/vim-airline/vim-airline/wiki/Screenshots][Theme screenshots]]
+#+begin_src lua
+    use {
+      'vim-airline/vim-airline-themes',
+      config = function()
+        vim.cmd("let g:airline_theme='jellybeans'")
+      end
+    }
+#+end_src
+
 ** Project
 #+begin_src lua
 	use 'ahmedkhalf/project.nvim'
@@ -125,6 +169,8 @@ use 'mhinz/vim-startify'
 		requires = { {'nvim-lua/plenary.nvim'} }
 	}
 #+end_src
+
+#+RESULTS:
 
 Telescope for project search
 #+begin_src lua
@@ -146,14 +192,31 @@ Telescope for project search
 
 lsp_lines is a simple neovim plugin that renders diagnostics using virtual lines on top of the real line of code
 #+begin_src lua
- use 'neovim/nvim-lspconfig'
     use {
-        'https://git.sr.ht/~whynothugo/lsp_lines.nvim',
-        config = function()
-        require("lsp_lines").setup()
-        end
+    'neovim/nvim-lspconfig',
+    config = function()
+            require("lspconfig").clangd.setup {
+                on_attach = function(client, bufnr)
+                    navic.attach(client, bufnr)
+                end
+            }
+    end
     }
+use {
+    'https://git.sr.ht/~whynothugo/lsp_lines.nvim',
+    config = function()
+        require("lsp_lines").setup()
+    end
+ }
 #+end_src
+
+#+begin_src lua
+use {
+    "SmiteshP/nvim-navic",
+    requires = "neovim/nvim-lspconfig"
+}
+#+end_src
+
 ** Treesitter
 #+begin_src lua
 	use {
