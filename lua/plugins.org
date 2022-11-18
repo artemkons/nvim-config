@@ -34,6 +34,7 @@ vim.cmd([[
         autocmd!
         autocmd ColorScheme * :highlight BufferTabpageFill ctermbg=none
         autocmd ColorScheme * :highlight BufferCurrentMod ctermfg=1
+        autocmd ColorScheme * :highlight VertSplit ctermbg=none
     augroup END
 ]])
 #+end_src
@@ -58,9 +59,10 @@ keymap("n", "<C-l>", "<C-w>l", opts)
 keymap("n", "<leader>ws", ":split <cr>", opts)
 keymap("n", "<leader>wv", ":vsplit <cr>", opts)
 #+end_src
-** NERDTree
+** File manager
 #+begin_src lua
-keymap("", "<leader>f", ":NERDTreeToggle <cr>", opts)
+keymap("", "<leader>f", ":Lf <cr>", opts)
+
 #+end_src
 ** Telescope
 #+begin_src lua
@@ -99,26 +101,100 @@ Pywal theme
 	}
 #+end_src
 
+Make vertical borders transparent
+#+begin_src lua
+vim.cmd("set fillchars=vert:\\ ")
+#+end_src
 ** Starify
 #+begin_src lua
 use 'mhinz/vim-startify'
 #+end_src
-** NerdTree
+** File manager
 #+begin_src lua
-	use {
-		'preservim/nerdtree',
-		config = function()
-			vim.cmd('let NERDTreeShowHidden = 1')
-		end
-	}
+use {
+    'is0n/fm-nvim',
+    config = function()
+        require('fm-nvim').setup{
+        -- (Vim) Command used to open files
+        edit_cmd = "edit",
+
+        -- See `Q&A` for more info
+        on_close = {},
+        on_open = {},
+
+        -- UI Options
+        ui = {
+            -- Default UI (can be "split" or "float")
+            default = "float",
+
+            float = {
+                -- Floating window border (see ':h nvim_open_win')
+                border    = "none",
+
+                -- Highlight group for floating window/border (see ':h winhl')
+                float_hl  = "Normal",
+                border_hl = "FloatBorder",
+
+                -- Floating Window Transparency (see ':h winblend')
+                blend     = 0,
+
+                -- Num from 0 - 1 for measurements
+                height    = 0.8,
+                width     = 0.8,
+
+                -- X and Y Axis of Window
+                x         = 0.5,
+                y         = 0.5
+            },
+
+            split = {
+                -- Direction of split
+                direction = "topleft",
+
+                -- Size of split
+                size      = 24
+            }
+        },
+
+        -- Terminal commands used w/ file manager (have to be in your $PATH)
+        cmds = {
+            lf_cmd      = "lf", -- eg: lf_cmd = "lf -command 'set hidden'"
+            fm_cmd      = "fm",
+            nnn_cmd     = "nnn",
+            fff_cmd     = "fff",
+            twf_cmd     = "twf",
+            fzf_cmd     = "fzf", -- eg: fzf_cmd = "fzf --preview 'bat --style=numbers --color=always --line-range :500 {}'"
+            fzy_cmd     = "find . | fzy",
+            xplr_cmd    = "xplr",
+            vifm_cmd    = "vifm",
+            skim_cmd    = "sk",
+            broot_cmd   = "broot",
+            gitui_cmd   = "gitui",
+            ranger_cmd  = "ranger",
+            joshuto_cmd = "joshuto",
+            lazygit_cmd = "lazygit",
+            neomutt_cmd = "neomutt",
+            taskwarrior_cmd = "taskwarrior-tui"
+        },
+
+        -- Mappings used with the plugin
+        mappings = {
+            vert_split = "<C-v>",
+            horz_split = "<C-h>",
+            tabedit    = "<C-t>",
+            edit       = "<C-e>",
+            ESC        = ":quit <cr>"
+        },
+
+        -- Path to broot config
+        broot_conf = vim.fn.stdpath("data") .. "/site/pack/packer/start/fm-nvim/assets/broot_conf.hjson"
+    }
+
+
+  end
+}
 #+end_src
 
-#+begin_src lua
-	use {
-		'Xuyuanp/nerdtree-git-plugin',
-		requires = 'preservim/nerdtree'
-	}
-#+end_src
 ** Git
 #+begin_src lua
 	use {
@@ -126,9 +202,18 @@ use 'mhinz/vim-startify'
 		requires = 'nvim-lua/plenary.nvim'
 	}
 #+end_src
+
+#+begin_src lua
+keymap("n", "<leader>gg", ":Neogit <cr>", opts)
+#+end_src
+
+#+begin_src lua
+keymap("n", "<leader>gb", ":CocCommand git.showBlameDoc <cr>", opts)
+#+end_src
+
 ** Tabline
 
-[[https://github.com/romgrk/barbar.nvim][Github page]]
+Barbar [[https://github.com/romgrk/barbar.nvim][Github page]]
 #+begin_src lua
     use {
       'romgrk/barbar.nvim',
@@ -139,6 +224,13 @@ use 'mhinz/vim-startify'
       end
     }
 #+end_src
+
+#+begin_src lua
+keymap("n", "<leader>t]", ":BufferNext <cr>", opts)
+keymap("n", "<leader>t[", ":BufferPrevious <cr>", opts)
+keymap("n", "<leader>tq", ":BufferClose <cr>", opts)
+#+end_src
+
 ** Statusline
 
 [[https://github.com/vim-airline/vim-airline][vim-airline repo]]
@@ -216,6 +308,33 @@ use {
     requires = "neovim/nvim-lspconfig"
 }
 #+end_src
+** Debug
+#+begin_src lua
+use {
+  'mfussenegger/nvim-dap',
+  config=function()
+    local dap = require('dap')
+        dap.adapters.firefox = {
+        type = 'executable',
+        command = 'node',
+        args = {os.getenv('HOME') .. '/vscode-firefox-debug/dist/adapter.bundle.js'},
+    }
+
+    dap.configurations.typescriptreact = {
+      {
+        name = 'Debug with Firefox',
+        type = 'firefox',
+        request = 'launch',
+        reAttach = true,
+        url = 'http://localhost:3000',
+        webRoot = '${workspaceFolder}',
+        firefoxExecutable = '/Applications/Firefox.app/Contents/MacOS/firefox'
+      }
+    }
+  end
+ }
+#+end_src
+
 
 ** Treesitter
 #+begin_src lua
@@ -223,6 +342,33 @@ use {
 		'nvim-treesitter/nvim-treesitter',
 		run = ':TSUpdate'
 	}
+#+end_src
+
+Highlight func arguments
+https://github.com/m-demare/hlargs.nvim
+#+begin_src lua
+use {
+  'm-demare/hlargs.nvim',
+  requires = { 'nvim-treesitter/nvim-treesitter' },
+  config = function()
+      require('hlargs').setup()
+      require('hlargs').enable()
+  end
+}
+#+end_src
+
+* Surround
+https://github.com/kylechui/nvim-surround
+#+begin_src lua
+use({
+    "kylechui/nvim-surround",
+    tag = "*", -- Use for stability; omit to use `main` branch for the latest features
+    config = function()
+        require("nvim-surround").setup({
+            -- Configuration here, or leave empty to use defaults
+        })
+    end
+})
 #+end_src
 ** DZEN mode
 #+begin_src lua
